@@ -1,0 +1,334 @@
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/pages/chatbot_screen/chatbot_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:ecommerce_app_user/constants/routes.dart';
+// import 'package:ecommerce_app_user/firebase_helper/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/models/category_model/category_model.dart';
+import 'package:ecommerce_app_user/models/product_model/product_model.dart';
+import 'package:ecommerce_app_user/provider/app_provider.dart';
+// import 'package:ecommerce_app_user/screens/category_view/category_view.dart';
+// import 'package:ecommerce_app_user/screens/chatbot_screen/chatbot_screen.dart';
+// import 'package:ecommerce_app_user/screens/product_detail/product_details.dart';
+import 'package:ecommerce_app_user/widgets/top_titles/top_titles.dart';
+import 'package:provider/provider.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<CategoryModel> categoriesList = [];
+  List<ProductModel> productModelList = [];
+
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
+    appProvider.getUserInfoFirebase();
+    getCategoryList();
+    super.initState();
+  }
+
+  void getCategoryList() async {
+    setState(() {
+      isLoading = true;
+    });
+    FirebaseFirestoreHelper.instance.updateTokenFromFirebase();
+    categoriesList = await FirebaseFirestoreHelper.instance.getCategories();
+    productModelList = await FirebaseFirestoreHelper.instance.getBestProducts();
+
+    productModelList.shuffle();
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  TextEditingController search = TextEditingController();
+  List<ProductModel> searchList = [];
+  void searchProducts(String value) {
+    searchList = productModelList
+        .where((element) =>
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: isLoading
+          ? Center(
+              child: Container(
+                height: 100,
+                width: 100,
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const TopTitles(
+                          title: "Chào mừng bạn",
+                          subtitle: "Khám phá sản phẩm chất lượng",
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: search,
+                          onChanged: (value) {
+                            searchProducts(value);
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Tìm kiếm sản phẩm...",
+                            filled: true,
+                            fillColor: Colors.white,
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          "Danh mục",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  categoriesList.isEmpty
+                      ? const Center(
+                          child: Text("Trống"),
+                        )
+                      : SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: categoriesList
+                                .map(
+                                  (e) => Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Card(
+                                        color: Colors.white,
+                                        elevation: 7,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        child: SizedBox(
+                                          height: 100,
+                                          width: 100,
+                                          child: Image.network(e.image),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                  const SizedBox(height: 12),
+                  !isSearched()
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 12, left: 12),
+                          child: Text(
+                            "Danh sách sản phẩm",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : SizedBox.fromSize(),
+                  search.text.isNotEmpty && searchList.isEmpty
+                      ? const Center(
+                          child: Text("Không tìm thấy sản phẩm"),
+                        )
+                      : searchList.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: GridView.builder(
+                                padding: const EdgeInsets.only(bottom: 50),
+                                shrinkWrap: true,
+                                primary: false,
+                                itemCount: searchList.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  mainAxisSpacing: 20,
+                                  crossAxisSpacing: 20,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.8,
+                                ),
+                                itemBuilder: (ctx, index) {
+                                  ProductModel singleProduct =
+                                      searchList[index];
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Image.network(
+                                            singleProduct.image!,
+                                            height: 100,
+                                            width: 100,
+                                          ),
+                                          const SizedBox(height: 12.0),
+                                          Text(
+                                            singleProduct.name,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                              "Price: \$${singleProduct.price}"),
+                                          const SizedBox(height: 12.0),
+                                          // SizedBox(
+                                          //   height: 45,
+                                          //   width: 140,
+                                          //   child: OutlinedButton(
+                                          //     onPressed: () {},
+                                          //     child: const Text(
+                                          //       "Mua ngay",
+                                          //     ),
+                                          //   ),
+                                          // )
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.grey,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                            ),
+                                            child: const Text(
+                                              "Mua ngay",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          : productModelList.isEmpty
+                              ? const Center(
+                                  child: Text("Không có sản phẩm nổi bật"),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: GridView.builder(
+                                    padding: const EdgeInsets.only(bottom: 50),
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    itemCount: productModelList.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 20,
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 0.8,
+                                    ),
+                                    itemBuilder: (ctx, index) {
+                                      ProductModel singleProduct =
+                                          productModelList[index];
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.2),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {},
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Image.network(
+                                                singleProduct.image!,
+                                                height: 100,
+                                                width: 100,
+                                              ),
+                                              const SizedBox(height: 12.0),
+                                              Text(
+                                                singleProduct.name,
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                  "Price: \$${singleProduct.price}"),
+                                              const SizedBox(height: 12.0),
+                                              ElevatedButton(
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.grey,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8)),
+                                                ),
+                                                child: const Text(
+                                                  "Mua ngay",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
+    );
+  }
+
+  bool isSearched() {
+    if (search.text.isNotEmpty && searchList.isEmpty) {
+      return true;
+    } else if (search.text.isEmpty && searchList.isNotEmpty) {
+      return false;
+    } else if (searchList.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
