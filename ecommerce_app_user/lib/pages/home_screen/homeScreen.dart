@@ -1,4 +1,6 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/pages/category_screen/category_screen.dart';
 import 'package:ecommerce_app_user/pages/chatbot_screen/chatbot_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
@@ -24,6 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ProductModel> productModelList = [];
 
   bool isLoading = false;
+
+  final List<Map<String, String>> bannerImages = [
+    {"image": "assets/images/phone_banner.png", "category": "Phone"},
+    {"image": "assets/images/mouse_banner.png", "category": "Mouse"},
+    {"image": "assets/images/keyboard_banner.png", "category": "Keyboard"},
+    {"image": "assets/images/headphones_banner.png", "category": "Headphone"}
+  ];
 
   @override
   void initState() {
@@ -102,7 +111,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 20),
+
+                        // Them Slider
+                        chaySlider(),
+
+                        const SizedBox(height: 20),
+
                         const Text(
                           "Danh mục",
                           style: TextStyle(
@@ -125,7 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   (e) => Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Routes.instance.push(
+                                          widget: CategoryScreen(
+                                            categoryModel: e,
+                                          ),
+                                          context: context,
+                                        );
+                                      },
                                       child: Card(
                                         color: Colors.white,
                                         elevation: 7,
@@ -204,19 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          Text(
-                                              "Price: \$${singleProduct.price}"),
+                                          Text("Giá: \$${singleProduct.price}"),
                                           const SizedBox(height: 12.0),
-                                          // SizedBox(
-                                          //   height: 45,
-                                          //   width: 140,
-                                          //   child: OutlinedButton(
-                                          //     onPressed: () {},
-                                          //     child: const Text(
-                                          //       "Mua ngay",
-                                          //     ),
-                                          //   ),
-                                          // )
                                           ElevatedButton(
                                             onPressed: () {},
                                             style: ElevatedButton.styleFrom(
@@ -287,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               ),
                                               Text(
-                                                  "Price: \$${singleProduct.price}"),
+                                                  "Giá: \$${singleProduct.price}"),
                                               const SizedBox(height: 12.0),
                                               ElevatedButton(
                                                 onPressed: () {},
@@ -330,5 +341,50 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return false;
     }
+  }
+
+  Widget chaySlider() {
+    return CarouselSlider(
+      items: bannerImages.map((imageUrl) {
+        CategoryModel? category = categoriesList.firstWhere(
+          (e) => e.name.toLowerCase() == imageUrl["category"]!.toLowerCase(),
+          orElse: () => categoriesList.isNotEmpty
+              ? categoriesList.first
+              : CategoryModel(
+                  id: "",
+                  name: "Mặc định",
+                  image: "",
+                ),
+        );
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryScreen(
+                  categoryModel: category,
+                ),
+              ),
+            );
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: ClipRRect(
+              // borderRadius: BorderRadius.circular(0),
+              child: Image.asset(
+                imageUrl["image"]!,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+      options: CarouselOptions(
+        height: 325,
+        autoPlay: true,
+        enlargeCenterPage: true,
+        viewportFraction: 1,
+      ),
+    );
   }
 }

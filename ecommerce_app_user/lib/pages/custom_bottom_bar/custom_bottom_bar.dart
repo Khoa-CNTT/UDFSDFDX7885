@@ -26,6 +26,8 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   List<Widget> _buildScreens() => [
         HomeScreen(),
         ChatbotScreen(),
+        HomeScreen(),
+        HomeScreen(),
       ];
 
   Color? _getSecondaryItemColorForSpecificStyles() =>
@@ -52,8 +54,32 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           // scrollController: _scrollControllers.first,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
-          title: "Chatbot",
+          icon: const Icon(Icons.shopping_cart),
+          title: "Giỏ hàng",
+          opacity: 1,
+          activeColorPrimary: Colors.blue,
+          activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
+                  _navBarStyle == NavBarStyle.style10
+              ? Colors.white
+              : null,
+          inactiveColorPrimary: Colors.grey,
+          // scrollController: _scrollControllers.first,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.circle),
+          title: "Đơn hàng",
+          opacity: 1,
+          activeColorPrimary: Colors.blue,
+          activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
+                  _navBarStyle == NavBarStyle.style10
+              ? Colors.white
+              : null,
+          inactiveColorPrimary: Colors.grey,
+          // scrollController: _scrollControllers.first,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.person),
+          title: "Tôi",
           opacity: 1,
           activeColorPrimary: Colors.blue,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
