@@ -56,94 +56,103 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 child: const CircularProgressIndicator(),
               ),
             )
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: kToolbarHeight * 0.8),
-                  Padding(
-                    padding: EdgeInsets.zero,
-                    child: Row(
-                      children: [
-                        const BackButton(),
-                        Text(
-                          categoryTranslations[widget.categoryModel.name] ??
-                              widget.categoryModel.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+          : buildBody(),
+    );
+  }
+
+  Widget buildBody() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: kToolbarHeight * 0.8),
+          Padding(
+            padding: EdgeInsets.zero,
+            child: Row(
+              children: [
+                const BackButton(),
+                Text(
+                  categoryTranslations[widget.categoryModel.name] ??
+                      widget.categoryModel.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-                  productModelList.isEmpty
-                      ? const Center(
-                          child: Text("Không có sản phẩm"),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: GridView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: productModelList.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              mainAxisSpacing: 20,
-                              crossAxisSpacing: 20,
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.8,
-                            ),
-                            itemBuilder: (ctx, index) {
-                              ProductModel singleProduct =
-                                  productModelList[index];
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Image.network(
-                                        singleProduct.image!,
-                                        height: 100,
-                                        width: 100,
-                                      ),
-                                      const SizedBox(height: 12.0),
-                                      Text(
-                                        singleProduct.name,
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text("Giá: \$${singleProduct.price}"),
-                                      const SizedBox(height: 12.0),
-                                      SizedBox(
-                                        height: 45,
-                                        width: 140,
-                                        child: OutlinedButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            "Mua ngay",
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                ],
+                ),
+              ],
+            ),
+          ),
+          productModelList.isEmpty
+              ? const Center(
+                  child: Text("Không có sản phẩm"),
+                )
+              : sanPhamCategory(),
+        ],
+      ),
+    );
+  }
+
+  Widget sanPhamCategory() {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: GridView.builder(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        primary: false,
+        itemCount: productModelList.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 20,
+          crossAxisCount: 2,
+          childAspectRatio: 0.8,
+        ),
+        itemBuilder: (ctx, index) {
+          ProductModel singleProduct = productModelList[index];
+          return sanPham(singleProduct);
+        },
+      ),
+    );
+  }
+
+  Widget sanPham(ProductModel singleProduct) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: GestureDetector(
+        onTap: () {},
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.network(
+              singleProduct.image!,
+              height: 100,
+              width: 100,
+            ),
+            const SizedBox(height: 12.0),
+            Text(
+              singleProduct.name,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            Text("Giá: \$${singleProduct.price}"),
+            const SizedBox(height: 12.0),
+            SizedBox(
+              height: 45,
+              width: 140,
+              child: OutlinedButton(
+                onPressed: () {},
+                child: const Text(
+                  "Mua ngay",
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

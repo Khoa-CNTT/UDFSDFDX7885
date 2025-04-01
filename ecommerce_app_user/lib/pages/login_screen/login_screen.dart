@@ -29,106 +29,105 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.white,
         toolbarHeight: 50.0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const TopTitles(
-              title: "Đăng nhập",
-              subtitle: "Chào bạn đến với ứng dụng của tôi",
+      body: buildBody(),
+    );
+  }
+
+  Widget buildBody() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const TopTitles(
+            title: "Đăng nhập",
+            subtitle: "Chào bạn đến với ứng dụng của tôi",
+          ),
+          const SizedBox(height: 45),
+          TextFormField(
+            controller: _email,
+            decoration: const InputDecoration(
+              hintText: "Email",
+              prefixIcon: Icon(Icons.email),
             ),
-            const SizedBox(height: 45),
-            TextFormField(
-              controller: _email,
-              decoration: const InputDecoration(
-                hintText: "Email",
-                prefixIcon: Icon(Icons.email),
+          ),
+          const SizedBox(height: 15),
+          TextFormField(
+            controller: _password,
+            obscureText: isShowPass,
+            decoration: InputDecoration(
+              hintText: "Password",
+              prefixIcon: const Icon(Icons.password),
+              suffixIcon: CupertinoButton(
+                onPressed: () {
+                  setState(() {
+                    isShowPass = !isShowPass;
+                  });
+                },
+                child: isShowPass
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off),
               ),
             ),
-            const SizedBox(height: 15),
-            TextFormField(
-              controller: _password,
-              obscureText: isShowPass,
-              decoration: InputDecoration(
-                hintText: "Password",
-                prefixIcon: const Icon(Icons.password),
-                suffixIcon: CupertinoButton(
-                  onPressed: () {
-                    setState(() {
-                      isShowPass = !isShowPass;
-                    });
-                  },
-                  child: isShowPass
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            PrimaryButton(
-              onPressed: () async {
-                bool isValidated = loginValidation(_email.text, _password.text);
-                // if (isValidated) {
-                //   bool isLogined = await FirebaseAuthHelper.instance
-                //       .login(_email.text, _password.text, context);
-                //   if (isLogined) {
-                //     Routes.instance.pushAndRemoveUntil(
-                //       widget: const CustomBottomBar(),
-                //       context: context,
-                //     );
-                //   }
-                // }
-                if (isValidated) {
-                  try {
-                    bool isLogined = await FirebaseAuthHelper.instance
-                        .login(_email.text, _password.text, context);
-                    if (isLogined) {
-                      Routes.instance.pushAndRemoveUntil(
-                        widget: const CustomBottomBar(),
-                        context: context,
-                      );
-                      showMessage("Đăng nhập thành công");
-                    }
-                  } on FirebaseAuthException catch (e) {
-                    showMessage(getMessageFromErrorCode(e.code));
-                  } catch (e) {
-                    showMessage("Lỗi không xác định. Vui lòng thử lại!");
-                  }
-                }
-              },
-              title: "Đăng nhập",
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Bạn chưa có tài khoản?",
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                CupertinoButton(
-                  onPressed: () {
-                    Routes.instance.push(
-                      widget: const SignupScreen(),
+          ),
+          const SizedBox(height: 20),
+          PrimaryButton(
+            onPressed: () async {
+              bool isValidated = loginValidation(_email.text, _password.text);
+
+              if (isValidated) {
+                try {
+                  bool isLogined = await FirebaseAuthHelper.instance
+                      .login(_email.text, _password.text, context);
+                  if (isLogined) {
+                    Routes.instance.pushAndRemoveUntil(
+                      widget: const CustomBottomBar(),
                       context: context,
                     );
-                  },
-                  child: const Text(
-                    "Đăng ký",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
+                    showMessage("Đăng nhập thành công");
+                  }
+                } on FirebaseAuthException catch (e) {
+                  showMessage(getMessageFromErrorCode(e.code));
+                } catch (e) {
+                  showMessage("Lỗi không xác định. Vui lòng thử lại!");
+                }
+              }
+            },
+            title: "Đăng nhập",
+          ),
+          const SizedBox(height: 20),
+          chuaDangKy(),
+        ],
       ),
+    );
+  }
+
+  Widget chuaDangKy() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Bạn chưa có tài khoản?",
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+        CupertinoButton(
+          onPressed: () {
+            Routes.instance.push(
+              widget: const SignupScreen(),
+              context: context,
+            );
+          },
+          child: const Text(
+            "Đăng ký",
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
+      ],
     );
   }
 }

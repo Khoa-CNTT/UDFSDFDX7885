@@ -30,105 +30,109 @@ class _SignupScreenState extends State<SignupScreen> {
         backgroundColor: Colors.white,
         toolbarHeight: 50.0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const TopTitles(
-                title: "Đăng ký",
-                subtitle: "Chào bạn đến với ứng dụng của tôi",
+      body: buildBody(),
+    );
+  }
+
+  Widget buildBody() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const TopTitles(
+              title: "Đăng ký",
+              subtitle: "Chào bạn đến với ứng dụng của tôi",
+            ),
+            const SizedBox(height: 45),
+            TextFormField(
+              controller: _name,
+              decoration: const InputDecoration(
+                hintText: "Tên của bạn",
+                prefixIcon: Icon(Icons.info),
               ),
-              const SizedBox(height: 45),
-              TextFormField(
-                controller: _name,
-                decoration: const InputDecoration(
-                  hintText: "Tên của bạn",
-                  prefixIcon: Icon(Icons.info),
+            ),
+            const SizedBox(height: 15),
+            TextFormField(
+              controller: _email,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                hintText: "Email",
+                prefixIcon: Icon(Icons.email),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextFormField(
+              controller: _phone,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(
+                hintText: "Số điện thoại",
+                prefixIcon: Icon(Icons.phone),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextFormField(
+              controller: _password,
+              obscureText: isShowPass,
+              decoration: InputDecoration(
+                hintText: "Password",
+                prefixIcon: const Icon(Icons.password),
+                suffixIcon: CupertinoButton(
+                  onPressed: () {
+                    setState(() {
+                      isShowPass = !isShowPass;
+                    });
+                  },
+                  child: const Icon(Icons.visibility),
                 ),
               ),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  hintText: "Email",
-                  prefixIcon: Icon(Icons.email),
-                ),
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: _phone,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  hintText: "Số điện thoại",
-                  prefixIcon: Icon(Icons.phone),
-                ),
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: _password,
-                obscureText: isShowPass,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  prefixIcon: const Icon(Icons.password),
-                  suffixIcon: CupertinoButton(
-                    onPressed: () {
-                      setState(() {
-                        isShowPass = !isShowPass;
-                      });
-                    },
-                    child: const Icon(Icons.visibility),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              PrimaryButton(
-                onPressed: () async {
-                  bool isValidated = signUpValidation(
-                      _email.text, _password.text, _name.text, _phone.text);
-                  if (isValidated) {
-                    bool isLogined = await FirebaseAuthHelper.instance.signUp(
-                        _name.text, _email.text, _password.text, context);
-                    if (isLogined) {
-                      Routes.instance.pushAndRemoveUntil(
-                        widget: const CustomBottomBar(),
-                        context: context,
-                      );
-                    }
+            ),
+            const SizedBox(height: 20),
+            PrimaryButton(
+              onPressed: () async {
+                bool isValidated = signUpValidation(
+                    _email.text, _password.text, _name.text, _phone.text);
+                if (isValidated) {
+                  bool isLogined = await FirebaseAuthHelper.instance
+                      .signUp(_name.text, _email.text, _password.text, context);
+                  if (isLogined) {
+                    Routes.instance.pushAndRemoveUntil(
+                      widget: const CustomBottomBar(),
+                      context: context,
+                    );
                   }
-                },
-                title: "Tạo tài khoản",
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Bạn đã có tài khoản?",
+                }
+              },
+              title: "Tạo tài khoản",
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Bạn đã có tài khoản?",
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                CupertinoButton(
+                  onPressed: () {
+                    Routes.instance.push(
+                      widget: const LoginScreen(),
+                      context: context,
+                    );
+                  },
+                  child: const Text(
+                    "Đăng nhập",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  CupertinoButton(
-                    onPressed: () {
-                      Routes.instance.push(
-                        widget: const LoginScreen(),
-                        context: context,
-                      );
-                    },
-                    child: const Text(
-                      "Đăng nhập",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );
