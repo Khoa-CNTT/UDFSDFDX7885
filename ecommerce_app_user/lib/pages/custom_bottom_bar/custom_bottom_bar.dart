@@ -42,10 +42,17 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
 
   List<PersistentBottomNavBarItem> _navBarsItems() => [
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
+          icon: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            transform: _controller.index == 0
+                ? Matrix4.identity().scaled(1.2)
+                : Matrix4.identity(),
+            child: Icon(Icons.home),
+            margin: const EdgeInsets.only(right: 3),
+          ),
           title: "Home",
           opacity: 1,
-          activeColorPrimary: Colors.blue,
+          activeColorPrimary: Colors.white,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
               ? Colors.white
@@ -54,10 +61,17 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           // scrollController: _scrollControllers.first,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.shopping_cart),
+          icon: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            transform: _controller.index == 0
+                ? Matrix4.identity().scaled(1.2)
+                : Matrix4.identity(),
+            margin: const EdgeInsets.only(right: 5),
+            child: Icon(Icons.shopping_cart),
+          ),
           title: "Giỏ hàng",
           opacity: 1,
-          activeColorPrimary: Colors.blue,
+          activeColorPrimary: Colors.white,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
               ? Colors.white
@@ -66,10 +80,17 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           // scrollController: _scrollControllers.first,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.circle),
+          icon: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            transform: _controller.index == 0
+                ? Matrix4.identity().scaled(1.2)
+                : Matrix4.identity(),
+            child: Icon(Icons.circle),
+            margin: const EdgeInsets.only(right: 6),
+          ),
           title: "Đơn hàng",
           opacity: 1,
-          activeColorPrimary: Colors.blue,
+          activeColorPrimary: Colors.white,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
               ? Colors.white
@@ -78,10 +99,18 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
           // scrollController: _scrollControllers.first,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.person),
+          icon: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            transform: _controller.index == 0
+                ? Matrix4.identity().scaled(1.2)
+                : Matrix4.identity(),
+            child: Icon(Icons.person),
+            margin: const EdgeInsets.only(right: 4),
+          ),
           title: "Tôi",
+
           opacity: 1,
-          activeColorPrimary: Colors.blue,
+          activeColorPrimary: Colors.white,
           activeColorSecondary: _navBarStyle == NavBarStyle.style7 ||
                   _navBarStyle == NavBarStyle.style10
               ? Colors.white
@@ -93,65 +122,66 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
 
   @override
   Widget build(final BuildContext context) => Scaffold(
-        body: PersistentTabView(
-          context,
-          controller: _controller,
-          screens: _buildScreens(),
-          items: _navBarsItems(),
-          handleAndroidBackButtonPress: true,
-          resizeToAvoidBottomInset: false,
-          stateManagement: true,
-          hideNavigationBarWhenKeyboardAppears: false,
-          popBehaviorOnSelectedNavBarItemPress: PopBehavior.once,
-          hideOnScrollSettings: HideOnScrollSettings(
-            hideNavBarOnScroll: true,
-            scrollControllers: _scrollControllers,
-          ),
-          padding: const EdgeInsets.only(top: 8),
-
-          // floatingActionButton: IconButton(
-          //   icon: Container(
-          //     padding: const EdgeInsets.all(12),
-          //     decoration: const BoxDecoration(
-          //         shape: BoxShape.circle, color: Colors.orange),
-          //     child: const Icon(
-          //       Icons.add,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          //   onPressed: () {},
-          // ),
-
-          backgroundColor: Colors.grey.shade900,
-          isVisible: !_hideNavBar,
-          animationSettings: const NavBarAnimationSettings(
-            navBarItemAnimation: ItemAnimationSettings(
-              // Navigation Bar's items animation properties.
-              duration: Duration(milliseconds: 400),
-              curve: Curves.ease,
-            ),
-            screenTransitionAnimation: ScreenTransitionAnimationSettings(
-              // Screen transition animation on change of selected tab.
-              animateTabTransition: true,
-              duration: Duration(milliseconds: 300),
-              screenTransitionAnimationType:
-                  ScreenTransitionAnimationType.fadeIn,
-            ),
-            onNavBarHideAnimation: OnHideAnimationSettings(
-              duration: Duration(milliseconds: 100),
-              curve: Curves.bounceInOut,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-          confineToSafeArea: false,
-          navBarHeight: kBottomNavigationBarHeight + 1,
-          navBarStyle:
-              _navBarStyle, // Choose the nav bar style with this property
+          child: PersistentTabView(
+            context,
+            controller: _controller,
+            screens: _buildScreens(),
+            items: _navBarsItems(),
+            backgroundColor: Colors.grey.shade900,
+
+            handleAndroidBackButtonPress: true,
+            resizeToAvoidBottomInset: false,
+            stateManagement: true,
+            hideNavigationBarWhenKeyboardAppears: false,
+            popBehaviorOnSelectedNavBarItemPress: PopBehavior.once,
+            hideOnScrollSettings: HideOnScrollSettings(
+              hideNavBarOnScroll: true,
+              scrollControllers: _scrollControllers,
+            ),
+            padding: const EdgeInsets.only(top: 8, bottom: 5),
+            isVisible: !_hideNavBar,
+            animationSettings: const NavBarAnimationSettings(
+              navBarItemAnimation: ItemAnimationSettings(
+                // Navigation Bar's items animation properties.
+                duration: Duration(milliseconds: 400),
+                curve: Curves.ease,
+              ),
+              screenTransitionAnimation: ScreenTransitionAnimationSettings(
+                // Screen transition animation on change of selected tab.
+                animateTabTransition: true,
+                duration: Duration(milliseconds: 400),
+                screenTransitionAnimationType:
+                    ScreenTransitionAnimationType.slide,
+              ),
+              onNavBarHideAnimation: OnHideAnimationSettings(
+                duration: Duration(milliseconds: 100),
+                curve: Curves.bounceInOut,
+              ),
+            ),
+            confineToSafeArea: false,
+            navBarHeight: kBottomNavigationBarHeight + 5,
+            decoration: NavBarDecoration(
+                borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            )),
+            navBarStyle:
+                _navBarStyle, // Choose the nav bar style with this property
+          ),
         ),
         floatingActionButton: Padding(
           padding:
               const EdgeInsets.only(bottom: 50), // Dịch lên để tránh BottomBar
-          child: FloatingActionButton(
-            onPressed: () {
+          child: GestureDetector(
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -159,8 +189,30 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                 ),
               );
             },
-            backgroundColor: Colors.blue,
-            child: const Icon(Icons.chat_bubble, color: Colors.white),
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Colors.orange, Colors.red],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  )
+                ],
+              ),
+              child: const Icon(
+                Icons.chat_bubble,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

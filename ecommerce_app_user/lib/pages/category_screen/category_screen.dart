@@ -65,18 +65,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: kToolbarHeight * 0.8),
-          Padding(
-            padding: EdgeInsets.zero,
+          // const SizedBox(height: kToolbarHeight * 0.1),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
             child: Row(
               children: [
-                const BackButton(),
+                const BackButton(
+                  color: Colors.white,
+                ),
                 Text(
                   categoryTranslations[widget.categoryModel.name] ??
                       widget.categoryModel.name,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -94,15 +104,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget sanPhamCategory() {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       child: GridView.builder(
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         primary: false,
         itemCount: productModelList.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisSpacing: 20,
-          crossAxisSpacing: 20,
+          mainAxisSpacing: 15,
+          crossAxisSpacing: 15,
           crossAxisCount: 2,
           childAspectRatio: 0.8,
         ),
@@ -122,35 +132,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
       child: GestureDetector(
         onTap: () {},
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network(
-              singleProduct.image!,
-              height: 100,
-              width: 100,
-            ),
-            const SizedBox(height: 12.0),
-            Text(
-              singleProduct.name,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text("Giá: \$${singleProduct.price}"),
-            const SizedBox(height: 12.0),
-            SizedBox(
-              height: 45,
-              width: 140,
-              child: OutlinedButton(
-                onPressed: () {},
-                child: const Text(
-                  "Mua ngay",
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  singleProduct.image!,
+                  height: 100,
+                  width: 100,
                 ),
               ),
-            )
-          ],
+              const SizedBox(height: 12.0),
+              Text(
+                singleProduct.name.length > 20
+                    ? singleProduct.name.substring(0, 20) + "..."
+                    : singleProduct.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "Giá: \$${singleProduct.price}",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.redAccent,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "Mua ngay",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -122,6 +122,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     filled: true,
                     fillColor: Colors.white,
                     prefixIcon: const Icon(Icons.search),
+                    suffixIcon: search.text.isNotEmpty
+                        ? IconButton(
+                            onPressed: () {
+                              search.clear();
+                              searchProducts("");
+                            },
+                            icon: Icon(Icons.clear),
+                          )
+                        : null,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none,
@@ -207,10 +216,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: ClipRRect(
-              // borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 imageUrl["image"]!,
                 fit: BoxFit.cover,
+                width: double.infinity,
+                height: 250,
               ),
             ),
           ),
@@ -233,25 +244,29 @@ class _HomeScreenState extends State<HomeScreen> {
             .map(
               (e) => Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Routes.instance.push(
-                      widget: CategoryScreen(
-                        categoryModel: e,
+                child: AnimatedContainer(
+                  duration: Duration(microseconds: 200),
+                  transform: Matrix4.identity()..scale(1.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Routes.instance.push(
+                        widget: CategoryScreen(
+                          categoryModel: e,
+                        ),
+                        context: context,
+                      );
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 7,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                      context: context,
-                    );
-                  },
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 7,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: Image.network(e.image),
+                      child: SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: Image.network(e.image),
+                      ),
                     ),
                   ),
                 ),
@@ -295,7 +310,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 12.0),
                   Text(
-                    singleProduct.name,
+                    singleProduct.name.length > 20
+                        ? singleProduct.name.substring(0, 20) + "..."
+                        : singleProduct.name,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -360,7 +378,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 12.0),
                   Text(
-                    singleProduct.name,
+                    singleProduct.name.length > 20
+                        ? singleProduct.name.substring(0, 20) + "..."
+                        : singleProduct.name,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -373,7 +394,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: const Text(
                       "Mua ngay",
