@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app_user/constants/routes.dart';
+import 'package:ecommerce_app_user/pages/login_screen/login_screen.dart';
+import 'package:ecommerce_app_user/pages/splash_screen/splash_screen.dart';
+import 'package:ecommerce_app_user/pages/welcome_screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:ecommerce_app_user/constants/constants.dart';
 import 'package:ecommerce_app_user/models/user_model/user_model.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseAuthHelper {
   static FirebaseAuthHelper instance = FirebaseAuthHelper();
@@ -49,23 +53,39 @@ class FirebaseAuthHelper {
     }
   }
 
-  void signOut() async {
-    await _auth.signOut();
-  }
-
-  Future<bool> changePassword(String password, BuildContext context) async {
+  Future<void> signOut(BuildContext context) async {
     try {
       showLoaderDialog(context);
-      _auth.currentUser!.updatePassword(password);
+      await _auth.signOut();
 
       Navigator.of(context, rootNavigator: true).pop();
-      showMessage("Đã thay đổi Password");
+      Routes.instance.pushAndRemoveUntil(
+        widget: SplashScreen(),
+        context: context,
+      );
+      showMessage("Đăng xuất thành công");
+    } catch (e) {
       Navigator.of(context).pop();
-      return true;
-    } on FirebaseAuthException catch (e) {
-      Navigator.of(context).pop();
-      showMessage(e.code.toString());
-      return false;
+      showMessage("Lỗi khi đăng xuất: $e");
     }
+    // await _auth.signOut();
   }
+
+  // void signOut(BuildContext context) async {
+  //   try {
+  //     showLoaderDialog(context);
+  //     await _auth.signOut();
+
+  //     Navigator.of(context, rootNavigator: true).pop();
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (_) => LoginScreen()),
+  //       (route) => false,
+  //     );
+  //     showMessage("Đăng xuất thành công");
+  //   } catch (e) {
+  //     Navigator.of(context).pop();
+  //     showMessage("Lỗi khi đăng xuất: $e");
+  //   }
+  //   // await _auth.signOut();
+  // }
 }

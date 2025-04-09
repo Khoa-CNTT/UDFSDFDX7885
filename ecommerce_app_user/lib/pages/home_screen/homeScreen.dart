@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
 import 'package:ecommerce_app_user/pages/category_screen/category_screen.dart';
 import 'package:ecommerce_app_user/pages/chatbot_screen/chatbot_screen.dart';
+import 'package:ecommerce_app_user/pages/product_detail_screen/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
 // import 'package:ecommerce_app_user/firebase_helper/firebase_firestore_helper/firebase_firestore.dart';
@@ -367,7 +368,14 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Routes.instance.push(
+                  widget: ProductDetailScreen(
+                    singleProduct: singleProduct,
+                  ),
+                  context: context,
+                );
+              },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -390,7 +398,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text("Giá: \$${singleProduct.price}"),
                   const SizedBox(height: 12.0),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Routes.instance.push(
+                        widget: ProductDetailScreen(
+                          singleProduct: singleProduct,
+                        ),
+                        context: context,
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
                       shape: RoundedRectangleBorder(

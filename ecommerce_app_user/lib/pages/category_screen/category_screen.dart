@@ -1,3 +1,4 @@
+import 'package:ecommerce_app_user/pages/product_detail_screen/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
 import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
@@ -131,7 +132,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Routes.instance.push(
+            widget: ProductDetailScreen(
+              singleProduct: singleProduct,
+            ),
+            context: context,
+          );
+        },
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -145,58 +153,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
               )
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  singleProduct.image!,
-                  height: 100,
-                  width: 100,
-                ),
-              ),
-              const SizedBox(height: 12.0),
-              Text(
-                singleProduct.name.length > 20
-                    ? singleProduct.name.substring(0, 20) + "..."
-                    : singleProduct.name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "Giá: \$${singleProduct.price}",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.redAccent,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  "Mua ngay",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: sanPham_DanhMuc(singleProduct),
         ),
       ),
+    );
+  }
+
+  Widget sanPham_DanhMuc(ProductModel singleProduct) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            singleProduct.image!,
+            height: 100,
+            width: 100,
+          ),
+        ),
+        const SizedBox(height: 12.0),
+        Text(
+          singleProduct.name.length > 20
+              ? singleProduct.name.substring(0, 20) + "..."
+              : singleProduct.name,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          "Giá: \$${singleProduct.price}",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.redAccent,
+          ),
+        ),
+        const SizedBox(height: 8.0),
+        ElevatedButton(
+          onPressed: () {
+            Routes.instance.push(
+              widget: ProductDetailScreen(
+                singleProduct: singleProduct,
+              ),
+              context: context,
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text(
+            "Mua ngay",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

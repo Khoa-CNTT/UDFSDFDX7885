@@ -1,6 +1,9 @@
 import 'package:ecommerce_app_user/constants/theme.dart';
+import 'package:ecommerce_app_user/firebase/firebase_auth_helper/firebase_auth_helper.dart';
 import 'package:ecommerce_app_user/firebase_options.dart';
 import 'package:ecommerce_app_user/pages/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:ecommerce_app_user/pages/splash_screen/splash_screen.dart';
+import 'package:ecommerce_app_user/pages/welcome_screen/welcome_screen.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +26,15 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: themeData,
-        home: const CustomBottomBar(),
+        home: StreamBuilder(
+          stream: FirebaseAuthHelper.instance.getAuthChange,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const CustomBottomBar();
+            }
+            return const WelcomeScreen();
+          },
+        ),
       ),
     );
   }

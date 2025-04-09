@@ -1,5 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ecommerce_app_user/pages/account_screen/account_screen.dart';
 import 'package:ecommerce_app_user/pages/chatbot_screen/chatbot_screen.dart';
+import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:ecommerce_app_user/pages/home_screen/homeScreen.dart';
@@ -14,7 +16,15 @@ class CustomBottomBar extends StatefulWidget {
 }
 
 class _CustomBottomBarState extends State<CustomBottomBar> {
-  final PersistentTabController _controller = PersistentTabController();
+  // final PersistentTabController _controller = PersistentTabController();
+  late PersistentTabController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+  }
+
   final bool _hideNavBar = false;
   final List<ScrollController> _scrollControllers = [
     ScrollController(),
@@ -25,9 +35,9 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
 
   List<Widget> _buildScreens() => [
         HomeScreen(),
-        ChatbotScreen(),
         HomeScreen(),
         HomeScreen(),
+        AccountScreen(),
       ];
 
   Color? _getSecondaryItemColorForSpecificStyles() =>
@@ -105,7 +115,6 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                 ? Matrix4.identity().scaled(1.2)
                 : Matrix4.identity(),
             child: Icon(Icons.person),
-            margin: const EdgeInsets.only(right: 4),
           ),
           title: "Tôi",
 
