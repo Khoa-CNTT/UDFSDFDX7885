@@ -1,5 +1,7 @@
+import 'package:ecommerce_app_user/constants/constants.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
 import 'package:ecommerce_app_user/models/product_model/product_model.dart';
+import 'package:ecommerce_app_user/pages/cart_screen/cart_screen.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +29,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              // Routes.instance.push(
-              //   widget: const CartScreen(),
-              //   context: context,
-              // );
+              Routes.instance.push(
+                widget: const CartScreen(),
+                context: context,
+              );
             },
             icon: const Icon(Icons.shopping_cart),
           )
@@ -122,10 +124,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: [
                   OutlinedButton(
                     onPressed: () {
-                      // ProductModel productModel =
-                      //     widget.singleProduct.copyWith(sluong: sluong);
-                      // appProvider.addCartProduct(productModel);
-                      // showMessage("Đã thêm vào giỏ hàng");
+                      ProductModel productModel =
+                          widget.singleProduct.copyWith(sluong: sluong);
+                      appProvider.addCartProduct(productModel);
+                      showMessage("Đã thêm vào giỏ hàng");
                     },
                     child: const Text(
                       "Thêm giỏ hàng",

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.hasData) {
               return const CustomBottomBar();
             }
-            return const WelcomeScreen();
+            return const SplashScreen();
           },
         ),
       ),
