@@ -1,6 +1,7 @@
 import 'package:ecommerce_app_user/constants/constants.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
 import 'package:ecommerce_app_user/models/product_model/product_model.dart';
+import 'package:ecommerce_app_user/pages/cart_item_checkout/cart_item_checkout.dart';
 import 'package:ecommerce_app_user/pages/cart_screen/cart_screen.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -143,13 +144,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     width: 150,
                     child: ElevatedButton(
                       onPressed: () {
-                        // appProvider.clearBuyProduct();
-                        // appProvider.addBuyProductCartList();
-                        // appProvider.clearCart();
-                        // Routes.instance.push(
-                        //   widget: const CartItemCheckout(),
-                        //   context: context,
-                        // );
+                        appProvider.clearBuyProduct();
+                        appProvider.addBuyProductCartList();
+                        appProvider.clearCart();
+                        Routes.instance.push(
+                          widget: const CartItemCheckout(),
+                          context: context,
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,

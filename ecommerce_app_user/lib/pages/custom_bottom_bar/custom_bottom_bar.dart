@@ -3,6 +3,7 @@ import 'package:ecommerce_app_user/pages/account_screen/account_screen.dart';
 import 'package:ecommerce_app_user/pages/cart_screen/cart_screen.dart';
 import 'package:ecommerce_app_user/pages/chatbot_screen/chatbot_screen.dart';
 import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
+import 'package:ecommerce_app_user/pages/order_screen/order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:ecommerce_app_user/pages/home_screen/homeScreen.dart';
@@ -37,7 +38,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
   List<Widget> _buildScreens() => [
         HomeScreen(),
         CartScreen(),
-        HomeScreen(),
+        OrderScreen(),
         AccountScreen(),
       ];
 

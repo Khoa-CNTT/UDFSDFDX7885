@@ -1,4 +1,8 @@
+import 'package:ecommerce_app_user/constants/routes.dart';
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/pages/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
+import 'package:ecommerce_app_user/stripe_helper/stripe_helper.dart';
 import 'package:ecommerce_app_user/widgets/primary_button/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -97,7 +101,32 @@ class _CartItemCheckoutState extends State<CartItemCheckout> {
             ),
             const SizedBox(height: 24),
             PrimaryButton(
-              onPressed: () async {},
+              onPressed: () async {
+                if (groupValue == 1) {
+                  bool value = await FirebaseFirestoreHelper.instance
+                      .uploadOrderedProductFirebase(
+                    appProvider.getBuyProductList,
+                    context,
+                    "Thanh toán khi nhận hàng",
+                  );
+
+                  appProvider.clearBuyProduct();
+                  if (value) {
+                    Future.delayed(const Duration(seconds: 2), () {
+                      Routes.instance.push(
+                          widget: const CustomBottomBar(), context: context);
+                    });
+                  }
+                } else {
+                  int value = double.parse(
+                          appProvider.totalPriceBuyProductList().toString())
+                      .round()
+                      .toInt();
+                  String totalPrice = (value * 100).toString();
+                  await StripeHelper.instance
+                      .makePayment(totalPrice.toString(), context);
+                }
+              },
               title: "Tiếp tục",
             )
           ],

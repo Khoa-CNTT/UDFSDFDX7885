@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app_user/models/order_model/order_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -87,5 +88,98 @@ class FirebaseFirestoreHelper {
       showMessage(e.toString());
       return [];
     }
+  }
+
+  Future<bool> uploadOrderedProductFirebase(
+    List<ProductModel> list,
+    BuildContext context,
+    String payment,
+  ) async {
+    try {
+      showLoaderDialog(context);
+      double totalPrice = 0.0;
+      for (var element in list) {
+        totalPrice += element.price * element.sluong!;
+      }
+
+      DocumentReference documentReference = _firebaseFirestore
+          .collection("usersOrders")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("orders")
+          .doc();
+
+      DocumentReference admin =
+          _firebaseFirestore.collection("orders").doc(documentReference.id);
+
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      admin.set({
+        "products": list.map((e) => e.toJson()),
+        "status": "Đang xử lý",
+        "totalPrice": totalPrice,
+        "payment": payment,
+        "userId": uid,
+        "orderId": admin.id,
+      });
+
+      documentReference.set({
+        "products": list.map((e) => e.toJson()),
+        "status": "Đang xử lý",
+        "totalPrice": totalPrice,
+        "payment": payment,
+        "userId": uid,
+        "orderId": documentReference.id,
+      });
+      Navigator.of(context, rootNavigator: true).pop();
+      showMessage("Thanh toán thành công");
+      return true;
+    } catch (e) {
+      showMessage(e.toString());
+      Navigator.of(context, rootNavigator: true).pop();
+
+      return false;
+    }
+  }
+
+  // Xem đơn hàng
+  Future<List<OrderModel>> getUserOrder() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _firebaseFirestore
+              .collection("usersOrders")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection("orders")
+              .get();
+
+      List<OrderModel> orderList =
+          querySnapshot.docs.map((e) => OrderModel.fromJson(e.data())).toList();
+
+      return orderList;
+    } catch (e) {
+      showMessage(e.toString());
+      return [];
+    }
+  }
+
+  Future<void> updateOrder(OrderModel orderModel, String status) async {
+    await _firebaseFirestore
+        .collection("usersOrders")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("orders")
+        .doc(orderModel.orderId)
+        .update(
+      {
+        "status": status,
+      },
+    );
+
+    await _firebaseFirestore
+        .collection("orders")
+        .doc(orderModel.orderId)
+        .update(
+      {
+        "status": status,
+      },
+    );
   }
 }
