@@ -64,7 +64,11 @@ class _CartSingleItemState extends State<CartSingleItem> {
                           children: [
                             FittedBox(
                               child: Text(
-                                widget.singleProduct.name,
+                                widget.singleProduct.name.length > 14
+                                    ? widget.singleProduct.name
+                                            .substring(0, 14) +
+                                        "..."
+                                    : widget.singleProduct.name,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -81,6 +85,13 @@ class _CartSingleItemState extends State<CartSingleItem> {
                                       });
                                       appProvider.updateSluong(
                                           widget.singleProduct, sluong);
+                                    }
+                                    if (sluong == 1) {
+                                      setState(() {
+                                        sluong--;
+                                      });
+                                      appProvider.removeCartProduct(
+                                          widget.singleProduct);
                                     }
                                   },
                                   padding: EdgeInsets.zero,

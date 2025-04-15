@@ -68,7 +68,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         children: [
           // const SizedBox(height: kToolbarHeight * 0.1),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
             decoration: BoxDecoration(
               color: Colors.blueAccent,
               borderRadius: const BorderRadius.only(
@@ -76,21 +76,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Row(
-              children: [
-                const BackButton(
-                  color: Colors.white,
-                ),
-                Text(
-                  categoryTranslations[widget.categoryModel.name] ??
-                      widget.categoryModel.name,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+            child: Container(
+              margin: EdgeInsets.only(top: 13),
+              child: Row(
+                children: [
+                  const BackButton(
                     color: Colors.white,
                   ),
-                ),
-              ],
+                  Text(
+                    categoryTranslations[widget.categoryModel.name] ??
+                        widget.categoryModel.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           productModelList.isEmpty

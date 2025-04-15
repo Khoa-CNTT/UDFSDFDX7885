@@ -27,17 +27,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Routes.instance.push(
-                widget: const CartScreen(),
-                context: context,
-              );
-            },
-            icon: const Icon(Icons.shopping_cart),
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -128,6 +117,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ProductModel productModel =
                           widget.singleProduct.copyWith(sluong: sluong);
                       appProvider.addCartProduct(productModel);
+
                       showMessage("Đã thêm vào giỏ hàng");
                     },
                     child: const Text(
@@ -146,11 +136,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       onPressed: () {
                         appProvider.clearBuyProduct();
                         appProvider.addBuyProductCartList();
-                        appProvider.clearCart();
+                        // appProvider.clearCart();
                         Routes.instance.push(
                           widget: const CartItemCheckout(),
                           context: context,
                         );
+
+                        print(appProvider.getCartProductList);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,

@@ -13,6 +13,7 @@ import 'package:ecommerce_app_user/provider/app_provider.dart';
 // import 'package:ecommerce_app_user/screens/chatbot_screen/chatbot_screen.dart';
 // import 'package:ecommerce_app_user/screens/product_detail/product_details.dart';
 import 'package:ecommerce_app_user/widgets/top_titles/top_titles.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -61,17 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextEditingController search = TextEditingController();
   List<ProductModel> searchList = [];
-  void searchProducts(String value) {
-    searchList = productModelList
-        .where((element) =>
-            element.name.toLowerCase().contains(value.toLowerCase()))
-        .toList();
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       body: isLoading
           ? Center(
               child: Container(
@@ -83,18 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : buildBody(),
     );
-  }
-
-  bool isSearched() {
-    if (search.text.isNotEmpty && searchList.isEmpty) {
-      return true;
-    } else if (search.text.isEmpty && searchList.isNotEmpty) {
-      return false;
-    } else if (searchList.isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   Widget buildBody() {
@@ -121,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: InputDecoration(
                     hintText: "Tìm kiếm sản phẩm...",
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Colors.grey[100],
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: search.text.isNotEmpty
                         ? IconButton(
@@ -133,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         : null,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -205,19 +188,16 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         return GestureDetector(
           onTap: () {
-            Navigator.push(
+            PersistentNavBarNavigator.pushNewScreen(
               context,
-              MaterialPageRoute(
-                builder: (context) => CategoryScreen(
-                  categoryModel: category,
-                ),
-              ),
+              screen: CategoryScreen(categoryModel: category),
+              withNavBar: false,
             );
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(16),
               child: Image.asset(
                 imageUrl["image"]!,
                 fit: BoxFit.cover,
@@ -250,11 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   transform: Matrix4.identity()..scale(1.0),
                   child: GestureDetector(
                     onTap: () {
-                      Routes.instance.push(
-                        widget: CategoryScreen(
-                          categoryModel: e,
-                        ),
-                        context: context,
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: CategoryScreen(categoryModel: e),
+                        withNavBar: false,
                       );
                     },
                     child: Card(
@@ -296,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ProductModel singleProduct = searchList[index];
           return Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.white.withOpacity(0.7),
               borderRadius: BorderRadius.circular(12),
             ),
             child: GestureDetector(
@@ -364,16 +343,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ProductModel singleProduct = productModelList[index];
           return Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: GestureDetector(
               onTap: () {
-                Routes.instance.push(
-                  widget: ProductDetailScreen(
+                PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: ProductDetailScreen(
                     singleProduct: singleProduct,
                   ),
-                  context: context,
+                  withNavBar: false,
                 );
               },
               child: Column(
@@ -427,5 +407,25 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+
+  void searchProducts(String value) {
+    searchList = productModelList
+        .where((element) =>
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+    setState(() {});
+  }
+
+  bool isSearched() {
+    if (search.text.isNotEmpty && searchList.isEmpty) {
+      return true;
+    } else if (search.text.isEmpty && searchList.isNotEmpty) {
+      return false;
+    } else if (searchList.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -44,6 +44,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 70),
             itemBuilder: (context, index) {
               OrderModel orderModel = snapshot.data![index];
+              if (orderModel.products.isEmpty) return SizedBox();
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: ExpansionTile(
@@ -60,101 +61,99 @@ class _OrderScreenState extends State<OrderScreen> {
                       width: 2.3,
                     ),
                   ),
-                  title: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Container(
-                            height: 120,
-                            width: 120,
-                            color: Colors.grey.withOpacity(0.5),
-                            child: Image.network(orderModel.products[0].image!),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  orderModel.products[0].name,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                  title: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Container(
+                          height: 120,
+                          width: 120,
+                          color: Colors.grey.withOpacity(0.5),
+                          child: Image.network(orderModel.products[0].image!),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                orderModel.products[0].name,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const SizedBox(height: 12),
-                                orderModel.products.length > 1
-                                    ? Column(
-                                        children: [
-                                          Text(
-                                            "Số lượng: ${orderModel.products[0].sluong.toString()}",
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 12),
-                                        ],
-                                      )
-                                    : SizedBox.fromSize(),
-                                Text(
-                                  "Tổng tiền: \$${orderModel.totalPrice.toString()}",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  "Trạng thái: ${orderModel.status}",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                orderModel.status == "Đang xử lý"
-                                    ? ElevatedButton(
-                                        onPressed: () async {
-                                          await FirebaseFirestoreHelper.instance
-                                              .updateOrder(orderModel, "Hủy");
-                                          orderModel.status = "Hủy";
-                                          setState(() {});
-                                        },
-                                        child: const Text(
-                                          "Hủy đơn hàng",
-                                          style: TextStyle(
-                                            color: Colors.white,
+                              ),
+                              const SizedBox(height: 12),
+                              orderModel.products.length > 1
+                                  ? Column(
+                                      children: [
+                                        Text(
+                                          "Số lượng: ${orderModel.products[0].sluong.toString()}",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      )
-                                    : SizedBox.fromSize(),
-                                orderModel.status == "Đang vận chuyển" ||
-                                        orderModel.status == "Đang xử lý"
-                                    ? ElevatedButton(
-                                        onPressed: () {
-                                          FirebaseFirestoreHelper.instance
-                                              .updateOrder(
-                                                  orderModel, "Xác nhận");
-                                          orderModel.status = "Xác nhận";
-                                          setState(() {});
-                                        },
-                                        child: const Text(
-                                          "Đơn đã giao",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                        const SizedBox(height: 12),
+                                      ],
+                                    )
+                                  : SizedBox.fromSize(),
+                              Text(
+                                "Tổng tiền: \$${orderModel.totalPrice.toString()}",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                "Trạng thái: ${orderModel.status}",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              orderModel.status == "Đang xử lý"
+                                  ? ElevatedButton(
+                                      onPressed: () async {
+                                        await FirebaseFirestoreHelper.instance
+                                            .updateOrder(orderModel, "Hủy");
+                                        orderModel.status = "Hủy";
+                                        setState(() {});
+                                      },
+                                      child: const Text(
+                                        "Hủy đơn hàng",
+                                        style: TextStyle(
+                                          color: Colors.white,
                                         ),
-                                      )
-                                    : SizedBox.fromSize(),
-                              ],
-                            ),
+                                      ),
+                                    )
+                                  : SizedBox.fromSize(),
+                              orderModel.status == "Đang vận chuyển" ||
+                                      orderModel.status == "Đang xử lý"
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        FirebaseFirestoreHelper.instance
+                                            .updateOrder(
+                                                orderModel, "Xác nhận");
+                                        orderModel.status = "Xác nhận";
+                                        setState(() {});
+                                      },
+                                      child: const Text(
+                                        "Đơn đã giao",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.fromSize(),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   children: orderModel.products.length > 1
@@ -162,66 +161,72 @@ class _OrderScreenState extends State<OrderScreen> {
                           const Text("Chi tiết"),
                           const Divider(color: Colors.red),
                           ...orderModel.products.map((singleProduct) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 12.0, top: 6),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: 80,
-                                        width: 80,
-                                        color: Colors.red.withOpacity(0.5),
-                                        child:
-                                            Image.network(singleProduct.image!),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: SizedBox(
-                                          height: 140,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  singleProduct.name,
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    Text(
-                                                      "Số lượng: ${singleProduct.sluong.toString()}",
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                            return SingleChildScrollView(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 12.0, top: 6),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 80,
+                                          width: 80,
+                                          color: Colors.red.withOpacity(0.5),
+                                          child: Image.network(
+                                              singleProduct.image!),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: SizedBox(
+                                            height: 140,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    singleProduct.name,
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                    const SizedBox(height: 12),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  "Tổng tiền: \$${singleProduct.price.toString()}",
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                ),
-                                              ],
+                                                  Column(
+                                                    children: [
+                                                      Text(
+                                                        "Số lượng: ${singleProduct.sluong.toString()}",
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 12),
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    "Tổng tiền: \$${singleProduct.price.toString()}",
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(color: Colors.red),
-                                ],
+                                      ],
+                                    ),
+                                    const Divider(color: Colors.red),
+                                  ],
+                                ),
                               ),
                             );
                           }).toList()
