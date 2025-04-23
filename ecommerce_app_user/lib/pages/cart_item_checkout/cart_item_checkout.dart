@@ -23,6 +23,7 @@ class _CartItemCheckoutState extends State<CartItemCheckout> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 1,
         title: const Text(
           "Phương thức thanh toán",
           style: TextStyle(
@@ -30,105 +31,130 @@ class _CartItemCheckoutState extends State<CartItemCheckout> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const SizedBox(height: 40),
-            Container(
-              height: 80,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 3,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Radio(
-                    value: 1,
-                    groupValue: groupValue,
-                    onChanged: (value) {
-                      setState(() {
-                        groupValue = value!;
-                      });
-                    },
-                  ),
-                  const Text(
-                    "Thanh toán khi nhận hàng",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+            const SizedBox(height: 20),
+            _buildPaymentOption(
+              value: 1,
+              groupValue: groupValue,
+              onChanged: (val) => setState(() => groupValue = val!),
+              icon: Icons.attach_money,
+              title: "Thanh toán khi nhận hàng",
             ),
-            const SizedBox(height: 25),
-            Container(
-              height: 80,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 3,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Radio(
-                    value: 2,
-                    groupValue: groupValue,
-                    onChanged: (value) {
-                      setState(() {
-                        groupValue = value!;
-                      });
-                    },
-                  ),
-                  const Text(
-                    "Thanh toán online",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+            const SizedBox(height: 16),
+            _buildPaymentOption(
+              value: 2,
+              groupValue: groupValue,
+              onChanged: (val) => setState(() => groupValue = val!),
+              icon: Icons.credit_card,
+              title: "Thanh toán online",
             ),
             const SizedBox(height: 24),
-            PrimaryButton(
-              onPressed: () async {
-                if (groupValue == 1) {
-                  bool value = await FirebaseFirestoreHelper.instance
-                      .uploadOrderedProductFirebase(
-                    appProvider.getBuyProductList,
-                    context,
-                    "Thanh toán khi nhận hàng",
-                  );
+            SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (groupValue == 1) {
+                    bool value = await FirebaseFirestoreHelper.instance
+                        .uploadOrderedProductFirebase(
+                      appProvider.getBuyProductList,
+                      context,
+                      "Thanh toán khi nhận hàng",
+                    );
 
-                  appProvider.clearBuyProduct();
-                  if (value) {
-                    Future.delayed(const Duration(seconds: 2), () {
-                      Routes.instance.push(
-                          widget: const CustomBottomBar(), context: context);
-                    });
+                    appProvider.clearBuyProduct();
+                    if (value) {
+                      Future.delayed(const Duration(seconds: 2), () {
+                        Routes.instance.push(
+                            widget: const CustomBottomBar(), context: context);
+                      });
+                    }
+                  } else {
+                    int value = double.parse(
+                            appProvider.totalPriceBuyProductList().toString())
+                        .round()
+                        .toInt();
+                    String totalPrice = (value * 100).toString();
+                    await StripeHelper.instance
+                        .makePayment(totalPrice.toString(), context);
                   }
-                } else {
-                  int value = double.parse(
-                          appProvider.totalPriceBuyProductList().toString())
-                      .round()
-                      .toInt();
-                  String totalPrice = (value * 100).toString();
-                  await StripeHelper.instance
-                      .makePayment(totalPrice.toString(), context);
-                }
-              },
-              title: "Tiếp tục",
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  "Tiếp tục",
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentOption({
+    required int value,
+    required int groupValue,
+    required ValueChanged<int?> onChanged,
+    required IconData icon,
+    required String title,
+  }) {
+    bool isSelected = value == groupValue;
+    return GestureDetector(
+      onTap: () => onChanged(value),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : const Color(0xFFEDEDED),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.redAccent : Colors.grey.shade400,
+            width: 2,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.redAccent.withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  )
+                ]
+              : [],
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: isSelected ? Colors.redAccent : Colors.grey),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: isSelected ? Colors.black : Colors.grey[800],
+                ),
+              ),
+            ),
+            Radio<int>(
+              value: value,
+              groupValue: groupValue,
+              onChanged: onChanged,
+              activeColor: Colors.redAccent,
+            ),
           ],
         ),
       ),

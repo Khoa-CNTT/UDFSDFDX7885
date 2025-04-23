@@ -1,8 +1,124 @@
-import 'package:ecommerce_app_user/constants/routes.dart';
+// import 'package:ecommerce_app_user/constants/routes.dart';
+// import 'package:ecommerce_app_user/firebase/firebase_auth_helper/firebase_auth_helper.dart';
+// import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
+// import 'package:ecommerce_app_user/provider/app_provider.dart';
+// import 'package:ecommerce_app_user/widgets/primary_button/primary_button.dart';
+// import 'package:flutter/material.dart';
+// import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+// import 'package:provider/provider.dart';
+
+// class AccountScreen extends StatefulWidget {
+//   const AccountScreen({super.key});
+
+//   @override
+//   State<AccountScreen> createState() => _AccountScreenState();
+// }
+
+// class _AccountScreenState extends State<AccountScreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     AppProvider appProvider = Provider.of<AppProvider>(context);
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         title: const Text(
+//           "Tài khoản",
+//           style: TextStyle(
+//             color: Colors.black,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//       ),
+//       body: Column(
+//         children: [
+//           Expanded(
+//             child: Column(
+//               children: [
+//                 appProvider.getUserInformation.image == null
+//                     ? const Icon(
+//                         Icons.person_outline,
+//                         size: 120,
+//                       )
+//                     : CircleAvatar(
+//                         radius: 70,
+//                         backgroundImage:
+//                             NetworkImage(appProvider.getUserInformation.image!),
+//                       ),
+//                 Text(
+//                   appProvider.getUserInformation.name,
+//                   style: const TextStyle(
+//                     fontSize: 22,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 Text(appProvider.getUserInformation.email),
+//                 const SizedBox(height: 12),
+//                 SizedBox(
+//                   width: 160,
+//                   child: PrimaryButton(
+//                     title: "Sửa thông tin",
+//                     onPressed: () {},
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//           Expanded(
+//             flex: 2,
+//             child: Column(
+//               children: [
+//                 ListTile(
+//                   onTap: () {},
+//                   leading: const Icon(Icons.shopping_bag_outlined),
+//                   title: const Text("Đơn hàng của bạn"),
+//                 ),
+//                 ListTile(
+//                   onTap: () {
+//                     PersistentNavBarNavigator.pushNewScreen(
+//                       context,
+//                       screen: FavouriteScreen(),
+//                       withNavBar: false,
+//                     );
+//                   },
+//                   leading: const Icon(Icons.favorite_outline),
+//                   title: const Text("Sản phẩm yêu thích"),
+//                 ),
+//                 ListTile(
+//                   onTap: () {},
+//                   leading: const Icon(Icons.info_outline),
+//                   title: const Text("Thông tin ứng dụng"),
+//                 ),
+//                 ListTile(
+//                   onTap: () {},
+//                   leading: const Icon(Icons.support_agent_outlined),
+//                   title: const Text("Hỗ trợ khách hàng"),
+//                 ),
+//                 ListTile(
+//                   onTap: () {},
+//                   leading: const Icon(Icons.change_circle_outlined),
+//                   title: const Text("Đổi mật khẩu"),
+//                 ),
+//                 ListTile(
+//                   onTap: () {
+//                     FirebaseAuthHelper.instance.signOut(context);
+//                   },
+//                   leading: const Icon(Icons.logout),
+//                   title: const Text("Đăng xuất"),
+//                 ),
+//                 const SizedBox(height: 12),
+//                 const Text("Version 4.0.0")
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 import 'package:ecommerce_app_user/firebase/firebase_auth_helper/firebase_auth_helper.dart';
 import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
-import 'package:ecommerce_app_user/widgets/primary_button/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -18,99 +134,153 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     AppProvider appProvider = Provider.of<AppProvider>(context);
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F6F8),
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text(
           "Tài khoản",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.black87,
             fontWeight: FontWeight.bold,
           ),
         ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Column(
-              children: [
-                appProvider.getUserInformation.image == null
-                    ? const Icon(
-                        Icons.person_outline,
-                        size: 120,
-                      )
-                    : CircleAvatar(
-                        radius: 70,
-                        backgroundImage:
-                            NetworkImage(appProvider.getUserInformation.image!),
+          // Thông tin người dùng
+          Card(
+            margin: const EdgeInsets.all(16),
+            elevation: 5,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              child: Column(
+                children: [
+                  appProvider.getUserInformation.image == null
+                      ? const Icon(Icons.person_outline, size: 100)
+                      : CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(
+                              appProvider.getUserInformation.image!),
+                        ),
+                  const SizedBox(height: 12),
+                  Text(
+                    appProvider.getUserInformation.name,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    appProvider.getUserInformation.email,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: 160,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black54,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                Text(
-                  appProvider.getUserInformation.name,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(appProvider.getUserInformation.email),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: 160,
-                  child: PrimaryButton(
-                    title: "Sửa thông tin",
-                    onPressed: () {},
-                  ),
-                )
-              ],
+                      child: const Text(
+                        "Sửa thông tin",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
+
+          // Menu
           Expanded(
-            flex: 2,
-            child: Column(
-              children: [
-                ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.shopping_bag_outlined),
-                  title: const Text("Đơn hàng của bạn"),
-                ),
-                ListTile(
-                  onTap: () {
-                    PersistentNavBarNavigator.pushNewScreen(
-                      context,
-                      screen: FavouriteScreen(),
-                      withNavBar: false,
-                    );
-                  },
-                  leading: const Icon(Icons.favorite_outline),
-                  title: const Text("Sản phẩm yêu thích"),
-                ),
-                ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.info_outline),
-                  title: const Text("Thông tin ứng dụng"),
-                ),
-                ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.support_agent_outlined),
-                  title: const Text("Hỗ trợ khách hàng"),
-                ),
-                ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.change_circle_outlined),
-                  title: const Text("Đổi mật khẩu"),
-                ),
-                ListTile(
-                  onTap: () {
-                    FirebaseAuthHelper.instance.signOut(context);
-                  },
-                  leading: const Icon(Icons.logout),
-                  title: const Text("Đăng xuất"),
-                ),
-                const SizedBox(height: 12),
-                const Text("Version 4.0.0")
-              ],
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              child: ListView(
+                children: [
+                  _buildListTile(
+                    icon: Icons.shopping_bag_outlined,
+                    title: "Đơn hàng của bạn",
+                    onTap: () {},
+                  ),
+                  _buildListTile(
+                    icon: Icons.favorite_outline,
+                    title: "Sản phẩm yêu thích",
+                    onTap: () {
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: const FavouriteScreen(),
+                        withNavBar: false,
+                      );
+                    },
+                  ),
+                  _buildListTile(
+                    icon: Icons.info_outline,
+                    title: "Thông tin ứng dụng",
+                    onTap: () {},
+                  ),
+                  _buildListTile(
+                    icon: Icons.support_agent_outlined,
+                    title: "Hỗ trợ khách hàng",
+                    onTap: () {},
+                  ),
+                  _buildListTile(
+                    icon: Icons.change_circle_outlined,
+                    title: "Đổi mật khẩu",
+                    onTap: () {},
+                  ),
+                  _buildListTile(
+                    icon: Icons.logout,
+                    title: "Đăng xuất",
+                    onTap: () {
+                      FirebaseAuthHelper.instance.signOut(context);
+                    },
+                    iconColor: Colors.red,
+                  ),
+                  const SizedBox(height: 20),
+                  const Center(
+                    child: Text(
+                      "Version 4.0.0",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildListTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color iconColor = Colors.black54,
+  }) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: ListTile(
+        onTap: onTap,
+        leading: Icon(icon, color: iconColor),
+        title: Text(title, style: const TextStyle(fontSize: 15)),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 14),
       ),
     );
   }

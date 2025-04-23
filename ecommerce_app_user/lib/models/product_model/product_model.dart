@@ -32,7 +32,9 @@ class ProductModel {
         image: json["image"],
         isFavorite: false,
         price: double.parse(json["price"].toString()),
-        sluong: json["sluong"],
+        sluong: json['sluong'] != null
+            ? int.tryParse(json['sluong'].toString()) ?? 1
+            : 1,
       );
 
   Map<String, dynamic> toJson() => {
@@ -42,7 +44,7 @@ class ProductModel {
         'image': image,
         'isFavorite': isFavorite,
         'price': price,
-        'Sluong': sluong,
+        'sluong': sluong,
       };
 
   ProductModel copyWith({

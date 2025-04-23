@@ -22,6 +22,13 @@ class _CartScreenState extends State<CartScreen> {
     AppProvider appProvider = Provider.of<AppProvider>(context);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF9F9F9),
+      appBar: AppBar(
+        title: const Text(
+          "Giỏ hàng",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
       bottomNavigationBar: SizedBox(
         height: 180,
         child: Padding(
@@ -48,43 +55,61 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              PrimaryButton(
-                title: "Thanh toán",
-                onPressed: () {
-                  appProvider.clearBuyProduct();
-                  appProvider.addBuyProductCartList();
-                  appProvider.clearCart();
-                  print(appProvider.getCartProductList);
-                  if (appProvider.getBuyProductList.isEmpty) {
-                    showMessage("Giỏ hàng rỗng");
-                  } else {
-                    PersistentNavBarNavigator.pushNewScreen(
-                      context,
-                      screen: CartItemCheckout(),
-                      withNavBar: false,
-                    );
-                  }
-                },
-              )
+              SizedBox(
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  onPressed: () {
+                    appProvider.clearBuyProduct();
+                    appProvider.addBuyProductCartList();
+
+                    if (appProvider.getBuyProductList.isEmpty) {
+                      showMessage("Giỏ hàng rỗng");
+                    } else {
+                      appProvider.clearCart();
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: const CartItemCheckout(),
+                        withNavBar: false,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    "Thanh toán",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
-      appBar: AppBar(
-        title: const Text(
-          "Giỏ hàng",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: appProvider.getCartProductList.length,
-        padding: const EdgeInsets.all(12),
-        itemBuilder: (ctx, item) {
-          return CartSingleItem(
-            singleProduct: appProvider.getCartProductList[item],
-          );
-        },
-      ),
+      body: appProvider.getCartProductList.isEmpty
+          ? const Center(
+              child: Text(
+                "Giỏ hàng đang trống",
+                style: TextStyle(fontSize: 16),
+              ),
+            )
+          : ListView.builder(
+              itemCount: appProvider.getCartProductList.length,
+              padding: const EdgeInsets.all(12),
+              itemBuilder: (ctx, item) {
+                return CartSingleItem(
+                  singleProduct: appProvider.getCartProductList[item],
+                );
+              },
+            ),
     );
   }
 }
