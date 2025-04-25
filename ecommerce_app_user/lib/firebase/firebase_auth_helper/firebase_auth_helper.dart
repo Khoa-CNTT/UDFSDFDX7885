@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
-import 'package:ecommerce_app_user/pages/login_screen/login_screen.dart';
 import 'package:ecommerce_app_user/pages/splash_screen/splash_screen.dart';
-import 'package:ecommerce_app_user/pages/welcome_screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_app_user/constants/constants.dart';
 import 'package:ecommerce_app_user/models/user_model/user_model.dart';
@@ -20,6 +18,7 @@ class FirebaseAuthHelper {
     try {
       showLoaderDialog(context);
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+
       Navigator.of(context).pop();
       return true;
     } on FirebaseAuthException catch (e) {
@@ -70,22 +69,4 @@ class FirebaseAuthHelper {
     }
     // await _auth.signOut();
   }
-
-  // void signOut(BuildContext context) async {
-  //   try {
-  //     showLoaderDialog(context);
-  //     await _auth.signOut();
-
-  //     Navigator.of(context, rootNavigator: true).pop();
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //       MaterialPageRoute(builder: (_) => LoginScreen()),
-  //       (route) => false,
-  //     );
-  //     showMessage("Đăng xuất thành công");
-  //   } catch (e) {
-  //     Navigator.of(context).pop();
-  //     showMessage("Lỗi khi đăng xuất: $e");
-  //   }
-  //   // await _auth.signOut();
-  // }
 }

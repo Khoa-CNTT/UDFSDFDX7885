@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:ecommerce_app_user/constants/routes.dart';
-import 'package:ecommerce_app_user/pages/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:ecommerce_app_user/pages/welcome_screen/welcome_screen.dart';
+
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

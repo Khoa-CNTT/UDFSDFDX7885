@@ -1,10 +1,7 @@
 import 'package:ecommerce_app_user/constants/constants.dart';
-import 'package:ecommerce_app_user/constants/routes.dart';
 import 'package:ecommerce_app_user/pages/cart_item_checkout/cart_item_checkout.dart';
 import 'package:ecommerce_app_user/pages/cart_screen/widgets/cart_single_item.dart';
-import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
-import 'package:ecommerce_app_user/widgets/primary_button/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
