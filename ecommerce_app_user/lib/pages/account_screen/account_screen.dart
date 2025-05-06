@@ -1,7 +1,9 @@
 import 'package:ecommerce_app_user/firebase/firebase_auth_helper/firebase_auth_helper.dart';
 import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/pages/change_password_screen/change_password_screen.dart';
 
 import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
+import 'package:ecommerce_app_user/pages/order_screen/order_screen.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
@@ -100,7 +102,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   _buildListTile(
                     icon: Icons.shopping_bag_outlined,
                     title: "Đơn hàng của bạn",
-                    onTap: () {},
+                    onTap: () {
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: const OrderScreen(),
+                        withNavBar: false,
+                      );
+                    },
                   ),
                   _buildListTile(
                     icon: Icons.favorite_outline,
@@ -121,7 +129,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   _buildListTile(
                     icon: Icons.change_circle_outlined,
                     title: "Đổi mật khẩu",
-                    onTap: () {},
+                    onTap: () {
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: const ChangePasswordScreen(),
+                        withNavBar: false,
+                      );
+                    },
                   ),
                   _buildListTile(
                     icon: Icons.logout,

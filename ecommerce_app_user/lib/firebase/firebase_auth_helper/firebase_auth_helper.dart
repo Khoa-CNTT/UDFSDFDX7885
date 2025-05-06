@@ -69,4 +69,21 @@ class FirebaseAuthHelper {
     }
     // await _auth.signOut();
   }
+
+  Future<bool> changePassword(String password, BuildContext context) async {
+    try {
+      showLoaderDialog(context);
+      _auth.currentUser!.updatePassword(password);
+
+      // _firestore.collection("users").doc(userModel.id).set(userModel.toJson());
+      Navigator.of(context, rootNavigator: true).pop();
+      showMessage("Đã thay đổi Password");
+      Navigator.of(context).pop();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      showMessage(e.code.toString());
+      return false;
+    }
+  }
 }

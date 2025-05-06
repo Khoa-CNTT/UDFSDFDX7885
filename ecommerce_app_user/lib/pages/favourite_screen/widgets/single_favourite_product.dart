@@ -51,7 +51,9 @@ class _SingleFavouriteProductState extends State<SingleFavouriteProduct> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.singleProduct.name,
+                              widget.singleProduct.name.length > 14
+                                  ? "${widget.singleProduct.name.substring(0, 14)}..."
+                                  : widget.singleProduct.name,
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
