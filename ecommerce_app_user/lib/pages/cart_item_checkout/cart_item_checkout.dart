@@ -1,5 +1,5 @@
 import 'package:ecommerce_app_user/constants/routes.dart';
-import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore_helper.dart';
 import 'package:ecommerce_app_user/pages/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:ecommerce_app_user/provider/app_provider.dart';
 import 'package:ecommerce_app_user/stripe_helper/stripe_helper.dart';

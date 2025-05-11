@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore_helper.dart';
 import 'package:ecommerce_app_user/pages/category_screen/category_screen.dart';
 // import 'package:ecommerce_app_user/pages/chatbot_screen/chatbot_screen.dart';
 import 'package:ecommerce_app_user/pages/product_detail_screen/product_detail_screen.dart';
@@ -290,8 +290,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 12.0),
                   Text(
-                    singleProduct.name.length > 20
-                        ? singleProduct.name.substring(0, 20) + "..."
+                    singleProduct.name.length > 15
+                        ? singleProduct.name.substring(0, 15) + "..."
                         : singleProduct.name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -366,8 +366,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 12.0),
                   Text(
-                    singleProduct.name.length > 20
-                        ? singleProduct.name.substring(0, 20) + "..."
+                    singleProduct.name.length > 15
+                        ? singleProduct.name.substring(0, 15) + "..."
                         : singleProduct.name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(

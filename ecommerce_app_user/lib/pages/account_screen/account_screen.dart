@@ -1,6 +1,7 @@
 import 'package:ecommerce_app_user/firebase/firebase_auth_helper/firebase_auth_helper.dart';
-import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore_helper.dart';
 import 'package:ecommerce_app_user/pages/change_password_screen/change_password_screen.dart';
+import 'package:ecommerce_app_user/pages/edit_profile/edit_profile.dart';
 
 import 'package:ecommerce_app_user/pages/favourite_screen/favourite_screen.dart';
 import 'package:ecommerce_app_user/pages/order_screen/order_screen.dart';
@@ -72,7 +73,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   SizedBox(
                     width: 160,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: const EditProfile(),
+                          withNavBar: false,
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black54,
                         shape: RoundedRectangleBorder(

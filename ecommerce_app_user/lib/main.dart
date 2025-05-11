@@ -1,6 +1,6 @@
 import 'package:ecommerce_app_user/constants/theme.dart';
 import 'package:ecommerce_app_user/firebase/firebase_auth_helper/firebase_auth_helper.dart';
-import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore_helper.dart';
 import 'package:ecommerce_app_user/firebase_options.dart';
 import 'package:ecommerce_app_user/pages/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:ecommerce_app_user/pages/splash_screen/splash_screen.dart';
@@ -32,8 +32,6 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuthHelper.instance.getAuthChange,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              
-
               return const CustomBottomBar();
             }
             return const SplashScreen();

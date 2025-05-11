@@ -1,4 +1,9 @@
-import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore.dart';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce_app_user/constants/constants.dart';
+import 'package:ecommerce_app_user/firebase/firebase_firestore_helper/firebase_firestore_helper.dart';
+import 'package:ecommerce_app_user/firebase/firebase_storage_helper/firebase_storage_helper.dart';
 
 import 'package:ecommerce_app_user/models/product_model/product_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +16,38 @@ class AppProvider with ChangeNotifier {
 
   void getUserInfoFirebase() async {
     _userModel = await FirebaseFirestoreHelper.instance.getUserInformation();
+    notifyListeners();
+  }
+
+  void updateUserInfoFirebase(
+      BuildContext context, UserModel userModel, File? file) async {
+    if (file == null) {
+      showLoaderDialog(context);
+      _userModel = userModel;
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(_userModel!.id)
+          .set(_userModel!.toJson());
+      Navigator.of(context, rootNavigator: true).pop();
+
+      Navigator.of(context).pop();
+    } else {
+      showLoaderDialog(context);
+
+      String imageUrl =
+          await FirebaseStorageHelper.instance.uploadUserImage(file);
+
+      _userModel = userModel.copyWith(image: imageUrl);
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(_userModel!.id)
+          .set(_userModel!.toJson());
+      Navigator.of(context, rootNavigator: true).pop();
+
+      Navigator.of(context).pop();
+    }
+    showMessage("Cập nhật thành công");
     notifyListeners();
   }
 
