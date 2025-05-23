@@ -3,6 +3,7 @@ import 'package:ecommerce_app_admin/firebase_options.dart';
 import 'package:ecommerce_app_admin/provider/app_provider.dart';
 import 'package:ecommerce_app_admin/screens/home_screen/home_screen.dart';
 import 'package:ecommerce_app_admin/screens/login_screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ void main() async {
   Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // await FirebaseAuth.instance.signOut();
   runApp(const MyApp());
 }
 
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         title: 'ADMIN',
         debugShowCheckedModeBanner: false,
         theme: themeData,
-        home: const HomeScreen(),
+        home: const LoginScreen(),
       ),
     );
   }

@@ -1,4 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'package:ecommerce_app_admin/constants/constants.dart';
+import 'package:ecommerce_app_admin/constants/routes.dart';
+import 'package:ecommerce_app_admin/firebase/firebase_auth_helper/firebase_auth_helper.dart';
+import 'package:ecommerce_app_admin/screens/home_screen/home_screen.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,127 +15,131 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? email, password;
-
-  @override
-  void initState() {
-    super.initState();
-    // _authService = getIt.get<AuthService>();
-    // _navigationService = getIt.get<NavigationService>();
-    // _alertService = getIt.get<AlertService>();
-  }
+  bool isShowPass = true;
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: _buildUI(),
-    );
-  }
-
-  Widget _buildUI() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 20,
-        ),
-        child: Column(
-          children: [
-            _headerText(),
-            _loginForm(),
-          ],
-        ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        toolbarHeight: 0,
       ),
-    );
-  }
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              children: [
+                // Tiêu đề
+                const Text(
+                  "Đăng nhập",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "TRANG ADMIN",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
 
-  Widget _headerText() {
-    return SizedBox(
-      width: MediaQuery.sizeOf(context).width,
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "TRANG ADMIN",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
+                // Nhập email
+                TextFormField(
+                  controller: _email,
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    prefixIcon: const Icon(Icons.email),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Nhập password
+                TextFormField(
+                  controller: _password,
+                  obscureText: isShowPass,
+                  decoration: InputDecoration(
+                    hintText: "Mật khẩu",
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                          isShowPass ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          isShowPass = !isShowPass;
+                        });
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                // Nút đăng nhập
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      bool isValidated =
+                          loginValidation(_email.text, _password.text);
+                      if (isValidated) {
+                        try {
+                          bool isLogined = await FirebaseAuthHelper.instance
+                              .login(_email.text, _password.text, context);
+                          if (isLogined) {
+                            Routes.instance.pushAndRemoveUntil(
+                              widget: const HomeScreen(),
+                              context: context,
+                            );
+                            showMessage("Đăng nhập thành công");
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          showMessage(getMessageFromErrorCode(e.code));
+                        } catch (e) {
+                          showMessage("Lỗi không xác định. Vui lòng thử lại!");
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      "Đăng nhập",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
-  }
-
-  Widget _loginForm() {
-    return Container(
-        // height: MediaQuery.sizeOf(context).height * 0.4,
-        // margin: EdgeInsets.symmetric(
-        //   vertical: MediaQuery.sizeOf(context).height * 0.05,
-        // ),
-        // child: Form(
-        //   key: _loginFormKey,
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //     mainAxisSize: MainAxisSize.max,
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: [
-        //       CustomFormField(
-        //         hintText: "Email",
-        //         validationRegEx: EMAIL_VALIDATION_REGEX,
-        //         onSaved: (value) {
-        //           setState(() {
-        //             email = value;
-        //           });
-        //         },
-        //       ),
-        //       CustomFormField(
-        //         hintText: "Password",
-        //         validationRegEx: PASSWORD_VALIDATION_REGEX,
-        //         obsureText: true,
-        //         onSaved: (value) {
-        //           password = value;
-        //         },
-        //       ),
-        //       _loginButton(),
-        //     ],
-        //   ),
-        // ),
-        );
-  }
-
-  Widget _loginButton() {
-    return SizedBox(
-        // width: MediaQuery.sizeOf(context).width,
-        // child: MaterialButton(
-        //   onPressed: () async {
-        //     if (_loginFormKey.currentState?.validate() ?? false) {
-        //       _loginFormKey.currentState?.save();
-        //       bool result = await _authService.login(email!, password!);
-        //       // print(result);
-        //       if (result) {
-        //         _navigationService.pushReplacementNamed("/home");
-        //         _alertService.showToast(
-        //           title: "Successfully",
-        //           icon: Icons.error,
-        //         );
-        //       } else {
-        //         _alertService.showToast(
-        //           title: "Loi",
-        //           icon: Icons.error,
-        //         );
-        //       }
-        //     }
-        //   },
-        //   color: Theme.of(context).colorScheme.primary,
-        //   child: const Text(
-        //     "Login",
-        //     style: TextStyle(
-        //       color: Colors.white,
-        //     ),
-        //   ),
-        // ),
-        );
   }
 }
